@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { Request } from "express"
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class JaguAuthGuard implements CanActivate {
     constructor(private jwtService: JwtService, private reflector: Reflector) {} 
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -18,6 +18,7 @@ export class AuthGuard implements CanActivate {
         try {
             const decoded = await this.jwtService.verifyAsync(token);
             request['user'] = decoded.sub; //Attach user to request
+            // sub means userID which we included on the auth login 
             return true;
 
         } catch (error) {

@@ -8,26 +8,25 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   firstName   String
   lastName    String
-  username    String   @unique
-  email       String   @unique
-  phoneNumber String   @unique
+  username    String    @unique
+  email       String    @unique
+  phoneNumber String    @unique
   password    String
-  addresses Address[]
-  createdAt   DateTime @default(now())
+  addresses   Address[]
+  createdAt   DateTime  @default(now())
   OTP         OTP[]
-  isVerified  Boolean @default(false)
+  isVerified  Boolean   @default(false)
 
   Order Order[]
-
-  Profile Profile[]
 
   Cart Cart[]
 
   Wishlist Wishlist[]
 }
+
 // Represents users in the system 
 // Relationships
 // addresses : a user can have multiple addresses.
@@ -36,15 +35,16 @@ model User {
 // Cart & Wishlist : A user can have multiple cart items and wishlisted products.
 
 model Address {
-  id        String  @id @default(uuid())
-  userId    String
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  street    String
-  city      String
-  state     String
-  zipCode   String
-  country   String
+  id      String @id @default(uuid())
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  street  String
+  city    String
+  state   String
+  zipCode String
+  country String
 }
+
 // user: Each Address belongs to one user
 
 model OTP {
@@ -55,17 +55,18 @@ model OTP {
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
+
 // Each user can have only one OTP
 
 model Product {
-  id    String @id @default(uuid())
-  name String
+  id          String   @id @default(uuid())
+  name        String
   description String?
-  price Float
-  stock Int
-  imageUrl  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  price       Float
+  stock       Int
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   OrderItem OrderItem[]
 
@@ -74,69 +75,70 @@ model Product {
   Wishlist Wishlist[]
 }
 
-model Profile {
-  id        String  @id @default(uuid())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String  @unique
-  bio       String?
-  avatarUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Order {
-  id  String @id @default(uuid())
-  userId  String
-  total Float
-  status String @default("pending")
-   //pending,paid, shipped ,delivered, cancelled
-   // should be replaced by enums
+  id        String   @id @default(uuid())
+  userId    String
+  total     Float
+  status    OrderStatus   @default(pending)
+
   createdAt DateTime @default(now())
 
-  user  User @relation(fields: [userId], references: [id])
+  user  User        @relation(fields: [userId], references: [id])
   items OrderItem[]
 }
+
+
 
 // Relationships
 // : user: An order belongs to one user
 // : items: Each order contains multiple ordered products
 
 model OrderItem {
-  id  String  @id @default(uuid())
-  orderId String
+  id        String @id @default(uuid())
+  orderId   String
   productId String
   quantity  Int
-  price Float
+  price     Float
 
-  order Order @relation(fields: [orderId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
   product Product @relation(fields: [productId], references: [id])
 }
+
 // order: Belongs to one order,
 // product: Each item corresponds to a specific product
 
 model Cart {
-  id  String @id @default(uuid())
-  userId  String
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId String
-  product Product @relation(fields: [productId], references: [id])
-  quantity  Int   @default(1)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
 // Relationships
 // user: Each cart entry belongs to one user
 //product: Each Cart entry refers to one product
 
 model Wishlist {
-  id  String  @id @default(uuid())
-  userId  String
-  user  User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId String
-  product Product @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())
 }
+
 // Represents Wishlisted Products
 // : Relationships :
 // : user: Each Wishlist entry belongs to one user
 // : product : Each Wishlist entry corresponds to a product
+enum OrderStatus {
+  pending
+  processing
+  shipped
+  delivered
+  cancelled
+}
