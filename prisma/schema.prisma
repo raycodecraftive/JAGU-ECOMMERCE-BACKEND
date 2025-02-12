@@ -28,6 +28,12 @@ model User {
 
   Wishlist Wishlist[]
 }
+// Represents users in the system 
+// Relationships
+// addresses : a user can have multiple addresses.
+// Order : A user can place multiple orders
+// Profile : A user has a single profile
+// Cart & Wishlist : A user can have multiple cart items and wishlisted products.
 
 model Address {
   id        String  @id @default(uuid())
@@ -39,6 +45,7 @@ model Address {
   zipCode   String
   country   String
 }
+// user: Each Address belongs to one user
 
 model OTP {
   id        String   @id @default(uuid()) //Unique identifier
@@ -48,6 +55,7 @@ model OTP {
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
+// Each user can have only one OTP
 
 model Product {
   id    String @id @default(uuid())
@@ -80,12 +88,18 @@ model Order {
   id  String @id @default(uuid())
   userId  String
   total Float
-  status String @default("pending") //pending,paid, shipped ,delivered, cancelled
+  status String @default("pending")
+   //pending,paid, shipped ,delivered, cancelled
+   // should be replaced by enums
   createdAt DateTime @default(now())
 
   user  User @relation(fields: [userId], references: [id])
   items OrderItem[]
 }
+
+// Relationships
+// : user: An order belongs to one user
+// : items: Each order contains multiple ordered products
 
 model OrderItem {
   id  String  @id @default(uuid())
@@ -97,6 +111,8 @@ model OrderItem {
   order Order @relation(fields: [orderId], references: [id])
   product Product @relation(fields: [productId], references: [id])
 }
+// order: Belongs to one order,
+// product: Each item corresponds to a specific product
 
 model Cart {
   id  String @id @default(uuid())
@@ -108,6 +124,9 @@ model Cart {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+// Relationships
+// user: Each cart entry belongs to one user
+//product: Each Cart entry refers to one product
 
 model Wishlist {
   id  String  @id @default(uuid())
@@ -117,3 +136,7 @@ model Wishlist {
   product Product @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())
 }
+// Represents Wishlisted Products
+// : Relationships :
+// : user: Each Wishlist entry belongs to one user
+// : product : Each Wishlist entry corresponds to a product

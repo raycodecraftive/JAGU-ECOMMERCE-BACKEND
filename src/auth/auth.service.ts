@@ -122,23 +122,5 @@ export class AuthService {
        
     }
 
-    /// OTP For email verification
-
-    async generateemailOtp(email: string) {
-        const user = await this.prisma.user.findUnique({where: { email } });
-
-        if(!user) throw new UnauthorizedException("User not Found");
-
-        const otpCode = crypto.randomInt(100000, 999999).toString(); // 6 digit OTP
-        const expiresAt = new Date(Date.now() +5 * 60 * 1000); // 5 minute expiry
-
-        await this.prisma.oTP.create({
-            data: { userId: user.id, otp: otpCode, expiresAt },
-        });
-
-        //Here, sending OTP via email through sendgrid
-        console.log('OTP for ${email}: ${otpCode}');
-
-        return { message: "OTP sent Successfully"};
-    }
+   
 }
