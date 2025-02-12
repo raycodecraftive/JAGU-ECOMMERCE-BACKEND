@@ -25,6 +25,7 @@ model User {
   Cart Cart[]
 
   Wishlist Wishlist[]
+  Review   Review[]
 }
 
 // Represents users in the system 
@@ -73,21 +74,34 @@ model Product {
   Cart Cart[]
 
   Wishlist Wishlist[]
+  Review   Review[]
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  // ---
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  // ---
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  // ---
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
 }
 
 model Order {
-  id        String   @id @default(uuid())
-  userId    String
-  total     Float
-  status    OrderStatus   @default(pending)
+  id     String      @id @default(uuid())
+  userId String
+  total  Float
+  status OrderStatus @default(pending)
 
   createdAt DateTime @default(now())
 
   user  User        @relation(fields: [userId], references: [id])
   items OrderItem[]
 }
-
-
 
 // Relationships
 // : user: An order belongs to one user
