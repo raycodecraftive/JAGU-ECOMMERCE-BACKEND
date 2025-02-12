@@ -16,8 +16,10 @@ export class JaguAuthGuard implements CanActivate {
             throw new UnauthorizedException('No token provided');
         }
         try {
-            const decoded = await this.jwtService.verifyAsync(token);
+            const decoded = await this.jwtService.verify(token);
             request['user'] = decoded.sub; //Attach user to request
+
+            console.log(request['user']);
             // sub means userID which we included on the auth login 
             return true;
 
