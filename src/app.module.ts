@@ -7,7 +7,7 @@ import { AuthService } from './modules/auth/auth.service';
 import { UserProfileModule } from './modules/user-profile/user-profile.module';
 import { ProductsModule } from './modules/products/products.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
-import { CartModule } from './cart/cart.module';
+import { CartModule } from './modules/cart/cart.module';
 
 
 @Module({
