@@ -14,6 +14,16 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
+  @Get("categories")
+  findAllCategories() {
+    return this.productsService.findAllCategories();
+  }
+
+  @Post("seed")
+  seedProducts(@Body() createProductDto: CreateProductDto) {
+    return this.productsService.seedProducts();
+  }
+
   @Get('details/:id')
   //localhost:3000/products/details/1
   findOne(@Param('id') id: string) {

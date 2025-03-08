@@ -60,14 +60,18 @@ model OTP {
 // Each user can have only one OTP
 
 model Product {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   description String?
   price       Float
   stock       Int
-  imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  categoryId String
+  category   ProductCategory @relation(fields: [categoryId], references: [id])
+
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   OrderItem OrderItem[]
 
@@ -156,4 +160,12 @@ enum OrderStatus {
   shipped
   delivered
   cancelled
+}
+
+model ProductCategory {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Product   Product[]
 }
